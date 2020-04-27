@@ -1,4 +1,6 @@
-from flask import Blueprint,render_template,request,jsonify,make_response,redirect,g
+from flask import Blueprint,request,jsonify,make_response,redirect,g
+
+from application import app,db
 from common.models.User import User
 from common.libs.user.UserService import UserService
 from common.libs.UrlManager import UrlManager
@@ -54,18 +56,49 @@ def login():
     
     response = make_response(json.dumps({'code':200,'msg':'登录成功~~~'}))
     # Cookie中存入的信息是user_info.uid,user_info
-    response.set_cookie("hmsc_1901C","%s@%s"%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
+    response.set_cookie(app.config['AUTH_COOKIE_NAME'],"%s@%s"%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
     return response
     
 
 @router_user.route("/logout")
 def logout():
-    return "登出"
+    response = make_response(redirect(UrlManager.buildUrl("/user/login")))
+    response.delete_cookie(app.config['AUTH_COOKIE_NAME'])
+    return response
 
-@router_user.route("/edit")
+@router_user.route("/edit",methods=['GET','POST'])
 def edit():
-    return "编辑"
+    if request.method == "GET":
+        return ops_render("user/edit.html")
+    # POST请求
+    resp = {
+        'code':200,
+        'msg':'登录成功',
+        'data':{}
+    }
+
+    req = request.values
+    nickname = req['nickname'] if 'nickname' in req else ''
+    email = req['email'] if 'email' in req else ''
+    if nickname is None or len(nickname) < 1:
+        resp['code'] = -1
+        resp['msg'] = "请输入规范的nickname"
+        return jsonify(resp)
+    if email is None or len(email) < 1:
+        resp['code'] = -1
+        resp['msg'] = "请输入规范的email"
+        return jsonify(resp)
+    
+    # 别忘了g
+    user_info = g.current_user
+    user_info.nickname = nickname
+    user_info.email = email
+
+    db.session.add(user_info)
+    db.session.commit()
+    return jsonify(resp)
+    
 
 @router_user.route("/reset-pwd")
 def resetPwd():
-    return "重置密码"
+    return ops_render("user/reset_pwd.html")
