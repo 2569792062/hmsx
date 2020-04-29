@@ -1,5 +1,5 @@
 ;
-var account_index_ops = {
+var member_index_ops = {
     init:function(){
         this.eventBind()
     },
@@ -19,7 +19,7 @@ var account_index_ops = {
     },
     myAjax:function(id,acts){
         $.ajax({
-            url:common_ops.buildUrl("/account/removeOrRecover"),
+            url:common_ops.buildUrl("/member/removeOrRecover"),
             type:"POST",
             data:{
                 "id":id,
@@ -29,7 +29,7 @@ var account_index_ops = {
             success:function(resp){
                 console.log(resp.msg)
                 if (resp.code == 200) {
-                    window.location.href = common_ops.buildUrl("/account/index")
+                    window.location.href = common_ops.buildUrl("/member/index")
                 }
             },
             error:function(error){
@@ -40,5 +40,5 @@ var account_index_ops = {
 }
 
 $(document).ready(function(){
-    account_index_ops.init()
+    member_index_ops.init()
 })
