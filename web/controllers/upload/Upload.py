@@ -31,7 +31,6 @@ def uploadPic():
     pic = request.files['pic']
     root_path = app.root_path + app.config['UPLOAD']['prefix_path']
     file_dir = datetime.datetime.now().strftime("%Y%m%d")
-    #C:\\Users\\Bruce\\Desktop\\hmsc\\web\\static\\upload\\20200430\\avatar.jpg
     save_dir = root_path + "\\" + file_dir
     if not os.path.exists(save_dir):
         print(save_dir)
