@@ -12,6 +12,7 @@ from web.controllers.static import route_static
 from web.interceptos.AuthInterceptor import *
 
 # 蓝图路由
+
 app.register_blueprint(route_index,url_prefix="/")
 app.register_blueprint(router_user,url_prefix="/user")
 app.register_blueprint(router_goods,url_prefix="/goods")

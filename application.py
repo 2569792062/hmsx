@@ -1,3 +1,4 @@
+# 封装Flask的全局变量，app，sql等配置
 from flask import Flask
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
