@@ -18,7 +18,6 @@ def ueditor():
                 conf_data = json.loads( re.sub( r'\/\*.*\*/','',fp.read() ) )
             except:
                 conf_data = {}
-        print(conf_data)
         return jsonify(conf_data)
 
 @router_upload.route("/pic",methods=['GET','POST'])
@@ -26,7 +25,8 @@ def uploadPic():
     resp = {
         'code':200,
         'msg':"操作成功",
-        'data':{}
+        # 'data':{}
+        'data':{'images':None}
     }
     pic = request.files['pic']
     root_path = app.root_path + app.config['UPLOAD']['prefix_path']
@@ -38,4 +38,5 @@ def uploadPic():
         os.chmod(save_dir,stat.S_IRWXU | stat.S_IRGRP | stat.S_IRWXO)
     pic_name = str(uuid.uuid4()).replace("-","")+"."+secure_filename(pic.filename)
     pic.save( "{0}\\{1}".format(save_dir,pic_name) )
+    resp['data']['images']=file_dir+"\\"+pic_name
     return jsonify(resp)

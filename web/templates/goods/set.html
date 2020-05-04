@@ -35,11 +35,16 @@
             <div class="form-group">
                 <label class="col-lg-2 control-label">封面图:</label>
                 <div class="col-lg-10">
-                    <form class="upload_pic_wrap" target="upload_file" enctype="multipart/form-data" method="POST" action="{{ buildUrl('/upload/pic') }}">
+                    <form class="upload_pic_wrap" target="upload_file" enctype="multipart/form-data" method="POST" action="{{ buildUrl('/upload/pic') }}" id="form1">
+                        <span class="pic-each">
+                            <img src="" alt="" id="images" style="height: 300px;width: 300px">
+                        </span>
                         <div class="upload_wrap pull-left">
                             <i class="fa fa-upload fa-2x"></i>
-                            <input type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
+
+                            <input type="file" id="input1" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
                         </div>
+
                         {% if info and info.main_image %}
                         <span class="pic-each">
                             <img src="{{ buildImageUrl( info.main_image ) }}"/>
@@ -99,4 +104,14 @@
 
 
 <script src="{{ buildStaticUrl( '/js/goods/set.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/js/jquery.form.js' ) }}"></script>
+<script>
+    $(function () {
+        $('#form1').ajaxForm(function(resp){
+            if(resp.code==200){
+                $('#images').attr('src',"/static/upload/"+resp.data.images)
+            }
+        })
+    })
+</script>
 {% endblock %}
